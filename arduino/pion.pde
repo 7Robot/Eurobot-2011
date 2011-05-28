@@ -76,7 +76,6 @@ char chope () {
       delay(50);
       }
     }
-  updown('u');
   while (abs(x - xavt) > eps || abs(y - yavt) > eps) 
      ordreI2C(1, 10, 1, 1, VITCHOPE);
   return sf; 
@@ -91,3 +90,14 @@ void initPince () {
   analogWrite(pwm, PW);
 }
 
+
+void pose() {        // Permet de poser une figure sur un pion pour un empilement
+  double xavt = x, yavt = y;
+  
+  updown('u');
+  while(digitalRead(pion))
+    ordreI2C(1, 10, 0, 1, VITCHOPE);
+  debloquage();
+  while (abs(x - xavt) > eps || abs(y - yavt) > eps)
+    ordreI2C(1, 10, 1, 1, VITCHOPE);
+}

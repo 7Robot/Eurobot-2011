@@ -41,6 +41,8 @@ const int idle = 13;
 int i;
 char bleu = bleu_init;
 int nprofil = 0;
+char pions[5] = {0};
+char etape = 0;
 
 
 LiquidCrystal lcd(7, 6, 5, 4, 3, 2);
@@ -73,22 +75,27 @@ void setup()
   
 void loop()
 {
-
- chope();
- /*
+  char p = 0;
+  
+  
+  etape = 0;
   avanceR(49,0);
   rotation(87,1,vitrot);
   avanceR(46,0);
   rotation(90, 1, vitrot);
-  if(chope())
-     deviation1();
+  pions[etape] = chope();
   rotation(90,1,vitrot);
   debloquage();
   avanceR(24, 1);
-  updown('d');
   fermeture();
   rotation(90, 0, vitrot);
-  chope();
+  etape = 1;
+  p = chope();
+  if (p && pions[etape - 1] == 0) {
+    rotation(90, 1, vitrot);
+    pose();
+    rotation(180, 0, vitrot);
+  } 
   rotation(180, 0, vitrot);
   avanceR(18, 0);
   debloquage();
@@ -114,8 +121,11 @@ void loop()
   
  analogWrite(pwm, 0);
  ordreI2C(1, 1, 1, 1, 0);
-  
-  */
+ lcd.clear();
+ lcd.setCursor(0,0);
+ lcd.print("Temps écoulé :");
+ lcd.setCursor(0,1);
+ lcd.print(millis() / 1000);
 while(1);
 }
 
