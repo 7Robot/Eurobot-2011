@@ -1,5 +1,5 @@
 //*********** lcd*********************
-//* LCD RS pin to digital pin 7
+// * LCD RS pin to digital pin 7
 // * LCD Enable pin to digital pin 6
 // * LCD D4 pin to digital pin 5
 // * LCD D5 pin to digital pin 4
@@ -32,7 +32,7 @@ void aff_odo(){
 
 void aff_couleur()
 {
-  char xc,yc; // il faut que l'origine soir le centre d'un carreau
+  char xc,yc; // il faut que l'origine soit le centre d'un carreau
  
   xc = floor(x/35.0);
   yc = floor(y/35.0);
