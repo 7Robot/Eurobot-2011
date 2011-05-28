@@ -91,18 +91,23 @@ void loop()
   rotation(90, 0, vitrot);
   etape = 1;
   p = chope();
-  if (p && pions[etape - 1] == 0) {
+  if (p && pions[etape - 1] == 0) {   
     rotation(90, 1, vitrot);
     pose();
     rotation(180, 0, vitrot);
-  } 
-  rotation(180, 0, vitrot);
-  avanceR(18, 0);
-  debloquage();
-  avanceR(18, 1);
-  updown('d');
-  fermeture();
-  rotation(90, 1, vitrot);
+    updown('d');
+    updown('d');
+  }
+  else {
+    rotation(180, 0, vitrot);
+    avanceR(18, 0);
+    debloquage();
+    avanceR(18, 1);
+    updown('d');
+    fermeture();
+    rotation(90, 1, vitrot);
+  }
+  
   avanceR(32, 0);
   rotation(90, 1, vitrot);
   chope();

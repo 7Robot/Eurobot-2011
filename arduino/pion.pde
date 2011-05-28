@@ -64,18 +64,16 @@ char chope () {
   while (digitalRead(pion)) {
     ordreI2C(1, 10, 0, 1, VITCHOPE);  
   }
-  ordreI2C(1, 30, 0, 1, 4); 
   fermeture();
   bloquage();
   if (analogRead(sharpfig) > FIGURE) {
       sf = 1;
-      for (int i = 0; i < 5; i++) {
       lcd.clear();
       lcd.setCursor(0,0);
       lcd.print("FIGURE !!!");
-      delay(50);
+      updown('u');
+      updown('u');
       }
-    }
   while (abs(x - xavt) > eps || abs(y - yavt) > eps) 
      ordreI2C(1, 10, 1, 1, VITCHOPE);
   return sf; 
@@ -94,7 +92,6 @@ void initPince () {
 void pose() {        // Permet de poser une figure sur un pion pour un empilement
   double xavt = x, yavt = y;
   
-  updown('u');
   while(digitalRead(pion))
     ordreI2C(1, 10, 0, 1, VITCHOPE);
   debloquage();
