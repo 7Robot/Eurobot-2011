@@ -22,7 +22,7 @@ void rampe(char vi, char vf)
 void rotation(int angle, char sens ,char vit)  //sens horaire= 1
 {
 	if(bleu_init == 1) // On inverse le sens de toutes les rotations si on joue Bleu.
-    angle = -angle;
+   sens = 1 - sens;
     
 	int nbpas_rot=map(angle,0,360,0,Ka);
 	ordreI2CInt(1,nbpas_rot,sens,0,vit);

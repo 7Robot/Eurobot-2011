@@ -1,10 +1,9 @@
-void updown ( char ud) {   // u pour monter et d pour descendre
-    Wire.beginTransmission(65);
-    Wire.send(byte(ud));   
-    Wire.send(byte(ud));     
-    Wire.send(byte(ud)); 
-    Wire.send(byte(ud));         
-    Wire.endTransmission();
+void updown (char ud, char nbre) {   // u pour monter et d pour descendre
+    
+  Wire.beginTransmission(65);
+  for (int i = 0; i < nbre; i++) 
+    Wire.send(byte(ud));
+  Wire.endTransmission();
 }
 
 void ouverture() {
@@ -69,10 +68,8 @@ char chope () {
   if (analogRead(sharpfig) > FIGURE) {
       sf = 1;
       lcd.clear();
-      lcd.setCursor(0,0);
       lcd.print("FIGURE !!!");
-      updown('u');
-      updown('u');
+      delay(3000);
       }
   while (abs(x - xavt) > eps || abs(y - yavt) > eps) 
      ordreI2C(1, 10, 1, 1, VITCHOPE);

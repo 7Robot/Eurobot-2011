@@ -5,7 +5,7 @@
 #define Kd 1334.0 // pas par metres
 #define Ka 1156.0 // pas par tour (2Pi)
 #define pi 3.14
-#define bleu_init 0
+#define bleu_init 0    // Permet de switcher entre un départ rouge ou bleu. 1 Pour départ bleu
 #define xinit 23
 #define yinit -31
 #define theta_init 0
@@ -48,8 +48,8 @@ char etape = 0;
 LiquidCrystal lcd(7, 6, 5, 4, 3, 2);
 
 //******************** Setup ********************
-void setup()
-{
+void setup()  {
+ 
    Serial.begin(9600);
    Wire.begin();            // join i2c bus (address optional for master)
    pinMode(idle, INPUT);
@@ -63,9 +63,9 @@ void setup()
    pinMode (sens2, OUTPUT);
    pinMode(pion, INPUT);
    digitalWrite(pion, HIGH);
-   updown('r');
-   initPince();    // Ça dure 1,3 secondes
+   updown('r', 1);
    analogWrite(pwm,PW);
+   initPince();    // Ça dure 1,3 secondes
 }
 
 /* Programme principal. */
@@ -73,50 +73,69 @@ void setup()
   //Sens horaire = 1
   
   
-void loop()
-{
+void loop() {
   char p = 0;
-  
-  
+ 
   etape = 0;
   avanceR(49,0);
-  rotation(87,1,vitrot);
+  rotation(87, 1, vitrot);
   avanceR(46,0);
   rotation(90, 1, vitrot);
   pions[etape] = chope();
+  if (pions[etape] == 0)
+    updown('u', 1);
+  else
+    updown('u', 7);
   rotation(90,1,vitrot);
+  updown('r', 1);
   debloquage();
   avanceR(24, 1);
   fermeture();
   rotation(90, 0, vitrot);
   etape = 1;
   p = chope();
+  
   if (p && pions[etape - 1] == 0) {   
     rotation(90, 1, vitrot);
     pose();
     rotation(180, 0, vitrot);
-    updown('d');
-    updown('d');
+    updown('r', 1);
   }
+ 
   else {
-    rotation(180, 0, vitrot);
+    rotation(200, 0, vitrot);
     avanceR(18, 0);
     debloquage();
     avanceR(18, 1);
-    updown('d');
+    updown('r', 1);
     fermeture();
-    rotation(90, 1, vitrot);
+    rotation(110, 1, vitrot);
   }
   
   avanceR(32, 0);
   rotation(90, 1, vitrot);
-  chope();
+  etape = 2;
+  p = chope();
+  
+  if (p && pions[etape - 1] == 0) {
+    rotation(90, 1, vitrot);
+    avanceR(32, 0);
+    rotation(70, 1, vitrot);
+    pose();
+    rotation(150, 0, vitrot);
+    avanceR(63, 0);
+    rotation(90, 1, vitrot);
+  }
+ 
+  else {
   rotation(90, 1, vitrot);
   avanceR(10, 1);
   debloquage();
   avanceR(21, 1);
   rotation(90, 0, vitrot);
-  updown('d');
+  }
+  
+  updown('r', 1);
   fermeture();
   chope();
   avanceR(70, 1);
