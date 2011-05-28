@@ -91,6 +91,9 @@ void aff_sharp () {
   lcd.setCursor(0,1);
   lcd.print("Fig:");
   lcd.print(analogRead(sharpfig));
+  lcd.print("  ");
+  lcd.print(millis()/1000);
+  
 }
   
   
