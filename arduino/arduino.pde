@@ -2,7 +2,7 @@
 #include <LiquidCrystal.h>
 #include <math.h>
 
-#define Kd 1334.0 // pas par metres
+#define Kd 1334.0 // pas par Metres
 #define Ka 1156.0 // pas par tour (2Pi)
 #define pi 3.14
 #define bleu_init 0    // Permet de switcher entre un départ rouge ou bleu. 1 Pour départ bleu
