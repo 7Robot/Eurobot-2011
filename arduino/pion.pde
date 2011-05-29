@@ -55,9 +55,9 @@ void debloquage () {
 }
 */
 
-char chope () {
+char chope (char pionAvt) {      // pionAvt = 1 si c'est une figure, 0 sinon. 
   double xavt = x, yavt = y;
-  int sf = 0;
+  int sf = 0;                  // On met sf a 1 si le pion vers lequel on se dirige est une figure.
   
   ouverture();
   while (digitalRead(pion)) {
@@ -66,11 +66,15 @@ char chope () {
   fermeture();
   bloquage();
   if (analogRead(sharpfig) > FIGURE) {
-      sf = 1;
-      lcd.clear();
-      lcd.print("FIGURE !!!");
-      delay(3000);
+     sf = 1;
+     lcd.clear();
+     lcd.print("FIGURE !!!");
+     delay(3000);
       }
+  if (sf == 1 && pionAvt == 0)
+     updown('u', 7);
+  else
+    updown('u', 1);
   while (abs(x - xavt) > eps || abs(y - yavt) > eps) 
      ordreI2C(1, 10, 1, 1, VITCHOPE);
   return sf; 
@@ -86,7 +90,7 @@ void initPince () {
 }
 
 
-void pose() {        // Permet de poser une figure sur un pion pour un empilement
+void pose() {        // Permet de poser une figure sur un pion pour un empilement.
   double xavt = x, yavt = y;
   
   while(digitalRead(pion))

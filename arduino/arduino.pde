@@ -74,74 +74,90 @@ void setup()  {
   
   
 void loop() {
-  char p = 0;
- 
+  
   etape = 0;
   avanceR(49,0);
   rotation(87, 1, vitrot);
   avanceR(46,0);
   rotation(90, 1, vitrot);
-  pions[etape] = chope();
-  if (pions[etape] == 0)
-    updown('u', 1);
-  else
-    updown('u', 7);
+  pions[etape] = chope(0);   // Pour le premier coup on ne fait pas d'empilement de toute façon. D'où le 0
   rotation(90,1,vitrot);
   updown('r', 1);
   debloquage();
   avanceR(24, 1);
   fermeture();
   rotation(90, 0, vitrot);
+ 
+ 
   etape = 1;
-  p = chope();
+  pions[etape] = chope(pions[etape - 1]);
   
-  if (p && pions[etape - 1] == 0) {   
+  if (pions[etape] && pions[etape - 1] == 0) {   // On décide de faire un empilement.
     rotation(90, 1, vitrot);
     pose();
     rotation(180, 0, vitrot);
     updown('r', 1);
+    fermeture();
   }
  
-  else {
-    rotation(200, 0, vitrot);
+  else {                          // On ne fait pas d'empilement.
+    rotation(190, 0, vitrot);
     avanceR(18, 0);
+    updown('r', 1);
     debloquage();
     avanceR(18, 1);
-    updown('r', 1);
     fermeture();
-    rotation(110, 1, vitrot);
+    rotation(100, 1, vitrot);
   }
   
+ 
+  etape = 2;
   avanceR(32, 0);
   rotation(90, 1, vitrot);
-  etape = 2;
-  p = chope();
+  pions[etape] = chope(pions[etape - 1]);
   
-  if (p && pions[etape - 1] == 0) {
+  if (pions[etape] && pions[etape - 1] == 0) {      // On empile.
     rotation(90, 1, vitrot);
     avanceR(32, 0);
-    rotation(70, 1, vitrot);
+    rotation(80, 1, vitrot);
     pose();
-    rotation(150, 0, vitrot);
+    updown('r', 1);
+    fermeture();
+    rotation(100, 1, vitrot);
     avanceR(63, 0);
     rotation(90, 1, vitrot);
   }
  
-  else {
+  else {                                // On continue normalement.
   rotation(90, 1, vitrot);
   avanceR(10, 1);
+  updown('r', 1);
   debloquage();
   avanceR(21, 1);
+  fermeture();
   rotation(90, 0, vitrot);
   }
   
+ 
+  etape = 3;
+  pions[etape] = chope(pions[etape - 1]);
+  
+  if (pions[etape] && pions [etape - 1] == 0) {      // On empile.
+   rotation(90, 1, vitrot);
+   pose();
+   updown('r', 1);
+   fermeture();  
+  }
+  
+  else {                         // On continue normalement.
+  avanceR(35, 1);
+  rotation(180, 1, vitrot);
+  avanceR(35, 1);
+  rotation(90, 1, vitrot);
+  avanceR(10, 0);
   updown('r', 1);
-  fermeture();
-  chope();
-  avanceR(70, 1);
-  rotation(270, 1, vitrot);
-  avanceR(7, 0);
   debloquage();
+  }
   
  analogWrite(pwm, 0);
  ordreI2C(1, 1, 1, 1, 0);
