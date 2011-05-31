@@ -55,13 +55,14 @@ void debloquage () {
 }
 */
 
-char chope (char pionAvt) {      // pionAvt = 1 si c'est une figure, 0 sinon. 
+char chope (char pionAvt) {   // pionAvt = 1 si c'est une figure, 0 sinon. 
+  actif = 0;
   double xavt = x, yavt = y;
   int sf = 0;                  // On met sf a 1 si le pion vers lequel on se dirige est une figure.
   
   ouverture();
   while (digitalRead(pion)) {
-    ordreI2C(1, 10, 0, 1, VITCHOPE);  
+    ordreI2C(1, 10, 0, 1, VITCHOPE);
   }
   fermeture();
   bloquage();
@@ -69,12 +70,20 @@ char chope (char pionAvt) {      // pionAvt = 1 si c'est une figure, 0 sinon.
      sf = 1;
      lcd.clear();
      lcd.print("FIGURE !!!");
-     delay(3000);
+     
       }
-  if (sf == 1 && pionAvt == 0)      // Permet de lever la pince à font que lorsqu'on en a vraiment besoin.
-     updown('u', 7);
-  else
+  if (sf == 1 && pionAvt == 0){     // Permet de lever la pince à font que lorsqu'on en a vraiment besoin.
+     ouverture();
+     bloquage();
+     delay(500);
+     updown('u', 15);
+     delay (1500);
+  }
+  
+  else {
     updown('u', 1);
+    actif = 1;
+  }
   while (abs(x - xavt) > eps || abs(y - yavt) > eps) 
      ordreI2C(1, 10, 1, 1, VITCHOPE);
   return sf; 
@@ -98,4 +107,5 @@ void pose() {        // Permet de poser une figure sur un pion pour un empilemen
   debloquage();
   while (abs(x - xavt) > eps || abs(y - yavt) > eps)
     ordreI2C(1, 10, 1, 1, VITCHOPE);
+  actif = 1;
 }

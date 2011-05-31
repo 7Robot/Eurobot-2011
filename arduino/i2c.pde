@@ -40,7 +40,7 @@ void ordreI2C(char masterA, char npas, char inv, char ratio, char vit)
       theta=theta + 2*sgn*npas*pi/Ka;
     }
     
-  // while (analogRead(sharpD) > OBSTACLE || analogRead(sharpG) > OBSTACLE);
+    while ((analogRead(sharpD) > OBSTACLE || analogRead(sharpG) > OBSTACLE) && actif);
    
     //aff_odo();
     //aff_couleur();

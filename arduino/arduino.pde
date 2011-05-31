@@ -5,7 +5,7 @@
 #define Kd 1334.0 // pas par Metres
 #define Ka 1156.0 // pas par tour (2Pi)
 #define pi 3.14
-#define bleu_init 0    // Permet de switcher entre un départ rouge ou bleu. 1 Pour départ bleu
+#define bleu_init 1    // Permet de switcher entre un départ rouge ou bleu. 1 Pour départ bleu
 #define xinit 23
 #define yinit -31
 #define theta_init 0
@@ -15,13 +15,26 @@
 #define vmax 15
 #define ndecoup 50
 #define vitrot 6    // vitesse de rotation avec la fonction "rotation"
-#define FERM 300    // temps de fermeture/ouverture pince
+#define FERM 200    // temps de fermeture/ouverture pince  ON MET 300 POUR DU 12V
 #define eps 0.5     // epsilon pour la fonction 
-#define PW 220      // valeur du pwm pour la pince
+#define PW 140      // valeur du pwm pour la pince ON MET 235 POUR DU 12V
 #define FIGURE 200  // niveau de détection du sharp pour une figure
 #define VITCHOPE 7  // vitesse lors d'une chope
 #define OBSTACLE 250// niveau de détection des sharp pour l'obstacle
 
+//////////////////// Position des pions ////////////////////
+
+#define PION1_X 100
+#define PION1_Y 100
+
+#define PION2_X 100
+#define PION2_Y 100
+
+#define PION3_X 100
+#define PION3_Y 100
+
+#define PION4_X 100
+#define PION4_Y 100
 
 //////////////////// La connectique ////////////////////
 
@@ -43,6 +56,7 @@ char bleu = bleu_init;
 int nprofil = 0;
 char pions[5] = {0};
 char etape = 0;
+char actif = 1;   // Permet l'activation ou pas du sharp pour les objets. 1 actif, 0 inactif.
 
 
 LiquidCrystal lcd(7, 6, 5, 4, 3, 2);
@@ -80,7 +94,7 @@ void loop() {
   rotation(87, 1, vitrot);
   avanceR(46,0);
   rotation(90, 1, vitrot);
-  pions[etape] = chope(0);   // Pour le premier coup on ne fait pas d'empilement de toute façon. D'où le 0
+  pions[etape] = chope(1);   // Pour le premier coup on ne fait pas d'empilement de toute façon. D'où le 0
   rotation(90,1,vitrot);
   updown('r', 1);
   debloquage();
@@ -146,18 +160,37 @@ void loop() {
    rotation(90, 1, vitrot);
    pose();
    updown('r', 1);
-   fermeture();  
+   fermeture();
+   chope(1);
+   actif = 0;
+   updown('r', 1);
+   rotation(90, 1, vitrot);
+   avanceR(70, 0);
+   rotation(90, 1, vitrot);
+   avanceR(15, 0);
+   debloquage();
   }
   
   else {                         // On continue normalement.
   avanceR(35, 1);
   rotation(180, 1, vitrot);
-  avanceR(35, 1);
+  avanceR(35, 0);
   rotation(90, 1, vitrot);
-  avanceR(10, 0);
+  avanceR(15, 0);
   updown('r', 1);
   debloquage();
   }
+  
+  fermeture();
+  avanceR(15, 1);
+  rotation(45, 0, vitrot);
+  chope(1);
+  actif = 0;
+  rotation(45, 0, vitrot);
+  avanceR(15, 0);
+  ouverture();
+  
+  
   
  analogWrite(pwm, 0);
  ordreI2C(1, 1, 1, 1, 0);
@@ -166,6 +199,7 @@ void loop() {
  lcd.print("Temps écoulé :");
  lcd.setCursor(0,1);
  lcd.print(millis() / 1000);
+
 while(1);
 }
 
