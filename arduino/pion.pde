@@ -71,7 +71,7 @@ char chope (char pionAvt) {      // pionAvt = 1 si c'est une figure, 0 sinon.
      lcd.print("FIGURE !!!");
      delay(3000);
       }
-  if (sf == 1 && pionAvt == 0)
+  if (sf == 1 && pionAvt == 0)      // Permet de lever la pince à font que lorsqu'on en a vraiment besoin.
      updown('u', 7);
   else
     updown('u', 1);
