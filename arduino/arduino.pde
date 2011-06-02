@@ -9,7 +9,7 @@
 #define xinit 23
 #define yinit -31
 #define theta_init 0
-#define pente_acc 5
+#define pente_acc 4
 #define pente_dec 5
 #define vmin 5
 #define vmax 15
@@ -24,17 +24,17 @@
 
 //////////////////// Position des pions ////////////////////
 
-#define PION1_X 100
-#define PION1_Y 100
+#define DPION_1 40  // Distance théorique du robot au pion 1 juste avant la fonction chope.
+#define DPION_2 40
+#define DPION_3 40
+#define DPION_4 40
 
-#define PION2_X 100
-#define PION2_Y 100
+#define PPION_1 30  // Distance théorique du robot au pion sur lequel il va y avoir un empilement.
+#define PPION_2 30
+#define PPION_3 30
+#define PPION_4 30
 
-#define PION3_X 100
-#define PION3_Y 100
-
-#define PION4_X 100
-#define PION4_Y 100
+#define ALPHA 10    // Tolétence lors de la fonction chope avant code erreur.
 
 //////////////////// La connectique ////////////////////
 
@@ -88,13 +88,24 @@ void setup()  {
   
   
 void loop() {
+  /////////////////////////////////////////////
+  /////////////////// ROUGE ///////////////////
+  
+
+  
+  
   
   etape = 0;
   avanceR(49,0);
-  rotation(87, 1, vitrot);
+  rotation(90, 1, vitrot); // BLEU : 90 pour la rotation. ROUGE : 89 de rotation.
   avanceR(46,0);
-  rotation(90, 1, vitrot);
-  pions[etape] = chope(1);   // Pour le premier coup on ne fait pas d'empilement de toute façon. D'où le 0
+  rotation(90, 1, vitrot); // BLEU : 90 pour la rotation ROUGE : 90 de rotation
+  pions[etape] = chope(1, DPION_1);  // Pour le premier coup on ne fait pas d'empilement de toute façon. D'où le 1
+  
+  if(pions[etape] == -1) {
+   rotation(90, 0, vitrot); 
+  }
+  
   rotation(90,1,vitrot);
   updown('r', 1);
   debloquage();
@@ -104,17 +115,22 @@ void loop() {
  
  
   etape = 1;
-  pions[etape] = chope(pions[etape - 1]);
+  pions[etape] = chope(pions[etape - 1], DPION_2);
   
-  if (pions[etape] && pions[etape - 1] == 0) {   // On décide de faire un empilement.
+   if(pions[etape] == -1) {
+    rotation(90, 0, vitrot);
+    }
+  
+   else if (pions[etape] && pions[etape - 1] == 0) {   // On décide de faire un empilement.
     rotation(90, 1, vitrot);
-    pose();
+    pose(PPION_1);
     rotation(180, 0, vitrot);
+    actif = 1;
     updown('r', 1);
     fermeture();
   }
  
-  else {                          // On ne fait pas d'empilement.
+   else {                          // On ne fait pas d'empilement.
     rotation(190, 0, vitrot);
     avanceR(18, 0);
     updown('r', 1);
@@ -128,16 +144,24 @@ void loop() {
   etape = 2;
   avanceR(32, 0);
   rotation(90, 1, vitrot);
-  pions[etape] = chope(pions[etape - 1]);
+  pions[etape] = chope(pions[etape - 1], DPION_3);
   
-  if (pions[etape] && pions[etape - 1] == 0) {      // On empile.
+  if (pions[etape] == -1) {
+   rotation(90, 0, vitrot);
+   avanceR(31, 0);
+   rotation(90, 1, vitrot); 
+  }
+  
+  else if (pions[etape] && pions[etape - 1] == 0) {      // On empile.
     rotation(90, 1, vitrot);
     avanceR(32, 0);
     rotation(80, 1, vitrot);
-    pose();
+    pose(PPION_2);
+    actif = 0;
     updown('r', 1);
     fermeture();
     rotation(100, 1, vitrot);
+    actif = 1;
     avanceR(63, 0);
     rotation(90, 1, vitrot);
   }
@@ -154,15 +178,24 @@ void loop() {
   
  
   etape = 3;
-  pions[etape] = chope(pions[etape - 1]);
+  pions[etape] = chope(pions[etape - 1], DPION_4);
   
-  if (pions[etape] && pions [etape - 1] == 0) {      // On empile.
+  if (pions[etape] == -1) {
+   rotation (180, 1, vitrot);
+   avanceR(105, 0);
    rotation(90, 1, vitrot);
-   pose();
+   chope(1, 20);
+   avanceR(20, 1);
+   ouverture();
+  }
+  
+  else if (pions[etape] && pions [etape - 1] == 0) {      // On empile.
+   rotation(90, 1, vitrot);
+   pose(PPION_3);
+   actif = 0;
    updown('r', 1);
    fermeture();
-   chope(1);
-   actif = 0;
+   chope(1, 30);        // Distance à l'empilement que l'on va mettre sur la case bonus.
    updown('r', 1);
    rotation(90, 1, vitrot);
    avanceR(70, 0);
@@ -183,10 +216,11 @@ void loop() {
   
   fermeture();
   avanceR(15, 1);
-  rotation(45, 0, vitrot);
-  chope(1);
+  rotation(90, 0, vitrot);
+  avanceR(35, 0);
+  rotation(90, 1, vitrot);
+  chope(1, 20);            // Distance au pion (ou empilement) adverse que l'on va tirer vers notre case rouge ahahahah (rire maléfique))
   actif = 0;
-  rotation(45, 0, vitrot);
   avanceR(15, 0);
   ouverture();
   
@@ -200,10 +234,9 @@ void loop() {
  lcd.setCursor(0,1);
  lcd.print(millis() / 1000);
 
-while(1);
+ while(1);
+ 
 }
-
-
 
 
 

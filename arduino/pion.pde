@@ -55,15 +55,26 @@ void debloquage () {
 }
 */
 
-char chope (char pionAvt) {   // pionAvt = 1 si c'est une figure, 0 sinon. 
+char chope (char pionAvt, double dth) {   // pionAvt = 1 si c'est une figure, 0 sinon. dmax est la distance théorique au pion objectif au-delà de laquelle le robot c'est raté.
   actif = 0;
   double xavt = x, yavt = y;
-  int sf = 0;                  // On met sf a 1 si le pion vers lequel on se dirige est une figure.
+  int sf = 0;                  // On met sf à 1 si le pion vers lequel on se dirige le robot est une figure. 0 sinon. -1 si erreur.
+  double distance = 0;
   
   ouverture();
-  while (digitalRead(pion)) {
-    ordreI2C(1, 10, 0, 1, VITCHOPE);
+  while (digitalRead(pion) && distance < dth + ALPHA) {
+    ordreI2C(1, 10, 0, 1, VITCHOPE); 
+    distance += 0.74962519;     // On avance de 0.74962519 cm à chaque boucle.
   }
+  
+  if (distance >= dth + ALPHA ) {
+    sf = -1;
+    while (abs(x - xavt) > eps || abs(y - yavt) > eps) 
+      ordreI2C(1, 10, 1, 1, VITCHOPE);
+    fermeture();
+    return sf;
+  }
+    
   fermeture();
   bloquage();
   if (analogRead(sharpfig) > FIGURE) {
@@ -99,13 +110,15 @@ void initPince () {
 }
 
 
-void pose() {        // Permet de poser une figure sur un pion pour un empilement.
+void pose(double dth) {        // Permet de poser une figure sur un pion pour un empilement.
   double xavt = x, yavt = y;
+  double distance = 0;
   
-  while(digitalRead(pion))
+  while(digitalRead(pion) && distance < dth ) {
     ordreI2C(1, 10, 0, 1, VITCHOPE);
+    distance += 0.74962519;
+  }
   debloquage();
   while (abs(x - xavt) > eps || abs(y - yavt) > eps)
     ordreI2C(1, 10, 1, 1, VITCHOPE);
-  actif = 1;
 }
