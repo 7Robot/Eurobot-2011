@@ -17,9 +17,9 @@
 #define vitrot 6    // vitesse de rotation avec la fonction "rotation"
 #define FERM 200    // temps de fermeture/ouverture pince  ON MET 300 POUR DU 12V
 #define eps 0.5     // epsilon pour la fonction 
-#define PW 140      // valeur du pwm pour la pince ON MET 235 POUR DU 12V
-#define FIGURE 200  // niveau de détection du sharp pour une figure
+#define PW 200      // valeur du pwm pour la pince ON MET 235 POUR DU 12V
 #define VITCHOPE 7  // vitesse lors d'une chope
+#define FIGURE 150  // niveau de détection du sharp pour une figure   *VALEUR INITIALE = 200*
 #define OBSTACLE 250// niveau de détection des sharp pour l'obstacle
 
 //////////////////// Position des pions ////////////////////
@@ -88,7 +88,8 @@ void setup()  {
   
   
 void loop() {
- //////////////////////////////////////////////////////////////////////////////////////////////////////////// ROUGE //////////////////////////////////////////////////////////////////
+  
+ //////////////////////////////////////////////////////////////////////////////////////////////////////////// ROUGE /////////////////////////////////////////////////////////////////
 ////////// ROUGE ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////// ROUGE /////////////////////////////////////////////////////////////////////////////////////////// ROUGE  ////////////////////
@@ -100,20 +101,32 @@ void loop() {
 ////////////////////////////////  ROUGE ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
  
-  if (bleu_init == 0) {
-   
+  if (bleu_init == 0) { 
+    
+    
   etape = 0;
-  avanceR(49,0);
+  avanceR(47,0);
   rotation(90, 1, vitrot); // BLEU : 90 pour la rotation. ROUGE : 89 de rotation.
-  avanceR(46,0);
+  avanceR(30, 0);
+  rotation(47, 0, vitrot);
+  ouverture();
+  avanceR(80, 0);
+  avanceR(80, 1);
+  fermeture();
+  rotation(45, 1, vitrot);
+  
+  avanceR(16,0);
   rotation(90, 1, vitrot); // BLEU : 90 pour la rotation ROUGE : 90 de rotation
   pions[etape] = chope(1, DPION_1);  // Pour le premier coup on ne fait pas d'empilement de toute façon. D'où le 1
   actif = 0;
   
   if(pions[etape] == -1) {
-   rotation(90, 0, vitrot); 
+   rotation(90, 0, vitrot);
+   avanceR(24, 0);
+   rotation(90, 1, vitrot);
   }
   
+  else {
   rotation(90,1,vitrot);
   updown('r', 1);
   debloquage();
@@ -121,6 +134,7 @@ void loop() {
   fermeture();
   rotation(90, 0, vitrot);
   actif = 1;
+  }
  
  
   etape = 1;
@@ -128,13 +142,13 @@ void loop() {
   
    if(pions[etape] == -1) {
     rotation(90, 0, vitrot);
+    actif = 1;
     }
   
    else if (pions[etape] && pions[etape - 1] == 0) {   // On décide de faire un empilement.
     rotation(90, 1, vitrot);
     pose(PPION_1);
     rotation(180, 0, vitrot);
-    actif = 1;
     updown('r', 1);
     fermeture();
   }
@@ -157,6 +171,7 @@ void loop() {
   
   if (pions[etape] == -1) {
    rotation(90, 0, vitrot);
+   actif = 1;
    avanceR(31, 0);
    rotation(90, 1, vitrot); 
   }
@@ -191,6 +206,7 @@ void loop() {
   
   if (pions[etape] == -1) {
    rotation (180, 1, vitrot);
+   actif = 1;
    avanceR(105, 0);
    rotation(90, 1, vitrot);
    chope(1, 20);
@@ -236,16 +252,18 @@ void loop() {
   debloquage();
   }
   
+  actif = 1;
   avanceR(30, 1);
   fermeture();
   rotation(90, 0, vitrot);
   avanceR(27, 0);
   rotation(90, 1, vitrot);
   chope(1, 20);            // Distance au pion (ou empilement) adverse que l'on va tirer vers notre case rouge ahahahah (rire maléfique))
-  actif = 0;
+  actif = 0;   // superflu mais bon, on ne sait jamais...
   avanceR(20, 0);
   ouverture();
   }
+  
 //////////////////////////////////////////////////////////////////////////////////////////////////////////// BLEU //////////////////////////////////////////////////////////////////
 ////////// BLEU ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -262,13 +280,23 @@ else {
   etape = 0;
   avanceR(49,0);
   rotation(90, 1, vitrot); // BLEU : 90 pour la rotation. ROUGE : 89 de rotation.
-  avanceR(46,0);
+  avanceR(30, 0);
+  rotation(47, 0, vitrot);
+  ouverture();
+  avanceR(80, 0);
+  avanceR(80, 1);
+  fermeture();
+  rotation(47, 1, vitrot);
+  
+  avanceR(16,0);
   rotation(90, 1, vitrot); // BLEU : 90 pour la rotation ROUGE : 90 de rotation
   pions[etape] = chope(1, DPION_1);  // Pour le premier coup on ne fait pas d'empilement de toute façon. D'où le 1
   actif = 0;
   
   if(pions[etape] == -1) {
-   rotation(90, 0, vitrot); 
+   rotation(90, 0, vitrot);
+   avanceR(24, 0);
+   rotation(90, 1, vitrot);
   }
   
   rotation(90,1,vitrot);
@@ -285,13 +313,13 @@ else {
   
    if(pions[etape] == -1) {
     rotation(90, 0, vitrot);
+    actif = 1;
     }
   
    else if (pions[etape] && pions[etape - 1] == 0) {   // On décide de faire un empilement.
     rotation(90, 1, vitrot);
     pose(PPION_1);
     rotation(180, 0, vitrot);
-    actif = 1;
     updown('r', 1);
     fermeture();
   }
@@ -314,8 +342,9 @@ else {
   
   if (pions[etape] == -1) {
    rotation(90, 0, vitrot);
+   actif = 1;
    avanceR(31, 0);
-   rotation(90, 1, vitrot); 
+   rotation(90, 1, vitrot);
   }
   
   else if (pions[etape] && pions[etape - 1] == 0) {      // On empile.
@@ -348,6 +377,7 @@ else {
   
   if (pions[etape] == -1) {
    rotation (180, 1, vitrot);
+   actif = 1;
    avanceR(80, 0);
    rotation(90, 1, vitrot);
    chope(1, 20);
