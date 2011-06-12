@@ -77,10 +77,10 @@ void ordreI2C(char masterA, char npas, char inv, char ratio, char vit)
     }
 
    
-    aff_odo();
+    //aff_odo();
     //aff_couleur();
     //aff_dist();
-    //aff_sharp();
+    aff_sharp();
     
     time = millis()/1000;
     if(time > 87)

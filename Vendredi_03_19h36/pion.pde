@@ -58,7 +58,7 @@ void debloquage () {
 char chope (char pionAvt, double dth) {   // pionAvt = 1 si c'est une figure, 0 sinon. dmax est la distance théorique au pion objectif au-delà de laquelle le robot c'est raté.
   actif = 0;
   double xavt = x, yavt = y;
-  int sf = 0;                  // On met sf à 1 si le pion vers lequel on se dirige le robot est une figure. 0 sinon. -1 si erreur.
+  int sf = 1;                  // On met sf à 1 si le pion vers lequel on se dirige le robot est une figure. 0 sinon. -1 si erreur.
   double distance = 0;
   
   ouverture();
@@ -84,7 +84,7 @@ char chope (char pionAvt, double dth) {   // pionAvt = 1 si c'est une figure, 0 
      
       }
   if (sf == 1 && pionAvt == 0){     // Permet de lever la pince à font que lorsqu'on en a vraiment besoin.
-     ouverture();
+     ouverture(); 
      bloquage();
      delay(500);
      updown('u', 15);
@@ -93,11 +93,11 @@ char chope (char pionAvt, double dth) {   // pionAvt = 1 si c'est une figure, 0 
   
   else {
     updown('u', 1);
-    actif = 1;
+    //actif = 1;
   }
   while (abs(x - xavt) > eps || abs(y - yavt) > eps) 
      ordreI2C(1, 10, 1, 1, VITCHOPE);
-  return sf; 
+  return 1; 
 }
 
 void initPince () {
