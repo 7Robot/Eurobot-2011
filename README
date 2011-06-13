@@ -1,4 +1,12 @@
 Code pour Re7, le robot de la coupe de France 2011.
-Arduino + ARM + PIC18F
 
 7robot@list.bde.enseeiht.fr
+
+./arduino : stratégie implémentée sur l'Arduino
+
+./moteurs : programme de commande des moteurs pas à pas en I²C.
+	Compilateur C18  de chez microchip pour implémentation sur 18f2550.
+	
+./moteurs : programme d'asservissement de l'élévateur avec commande
+	en I²C. Compilateur C18  de chez microchip pour implémentation 
+	sur 18f2550
